@@ -15,7 +15,6 @@ class Graffinity(object):
         self.functionresults = {}
         self.matrix = {}
 
-
         for func in funcs.keys():
           funcdata = [(n,nfuncs[func]) for n,nfuncs in data.items()]
           self.f[func] = {'data':funcdata}
@@ -38,14 +37,10 @@ class Graffinity(object):
 
         fr = self.functionresults
 
-
-
         for n in self.matrix:
           for m in self.matrix:
             self.matrix[n][m] = eval(self.affinityfunc)
             self.matrix[m][n] = self.matrix[n][m]
-
-
 
         print("final matrix",self.matrix)
 
@@ -71,7 +66,7 @@ class Graffinity(object):
         return
 
     def checkreverse(self, function, n, m):
-      if function[n][m] == 0:
+      if function[n][m] == 0.0:
         return function[m][n]
       return function[n][m]
 
