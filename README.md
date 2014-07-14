@@ -1,0 +1,4 @@
+graffinity
+==========
+
+Graffinity for graphs
