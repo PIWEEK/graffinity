@@ -35,20 +35,23 @@ class TestFoo(TestCase):
         gender_func = lambda x: abs(statistics.mean(x) - statistics.stdev(x))/statistics.mean(x)
         age_func = lambda x: abs(statistics.mean(x) - statistics.stdev(x))/statistics.mean(x)
         languages_func = lambda x: 5*(len(x) - len(set(x)))
-        affinity_func = lambda x: gender_func(x) + 3.5*age_func(x) + 0.1*languages_func(x)
+
 
         funcs = {
             "gender": gender_func,
             "age": age_func,
             "languages": languages_func,
-            "affinity": affinity_func
         }
-        g = graffinity.Graffinity(data, funcs)
+
+        affinityfunc = "gender_func(x) + 3.5*age_func(x) + 0.1*languages_func(x)"
+
+        g = graffinity.Graffinity(data, funcs, affinityfunc)
         results = g.calculate()
         self.assertEqual(results["n1"]["n1"], 0.0)
-        self.assertEqual(results["n1"]["n2"], 11.35272601618296)
-        self.assertEqual(results["n2"]["n1"], 11.35272601618296)
+        self.assertEqual(results["n1"]["n2"], 4.699007150707624)
+        self.assertEqual(results["n2"]["n1"], 4.699007150707624)
         self.assertEqual(results["n2"]["n2"], 0.0)
+        self.assertEqual(results["n2"]["n3"], 4.317276211268162)
 
 
 if __name__=="__main__":

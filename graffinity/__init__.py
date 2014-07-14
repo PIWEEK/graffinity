@@ -1,17 +1,20 @@
 import itertools
+import re
 from collections import defaultdict
 
 
 class Graffinity(object):
-    def __init__(self, data, funcs):
+    def __init__(self, data, funcs, affinityfunc):
 
         self.data = data
+
+        p = re.compile("([a-z]+ )_[a-z]+\(x\)", re.VERBOSE)
+        self.affinityfunc = p.sub("self.checkreverse(fr['\\1'],n,m)",affinityfunc)
 
         self.f = {}
         self.functionresults = {}
         self.matrix = {}
 
-        funcs.pop("affinity") #to workaround test's temporary inconsistency
 
         for func in funcs.keys():
           funcdata = [(n,nfuncs[func]) for n,nfuncs in data.items()]
@@ -35,9 +38,11 @@ class Graffinity(object):
 
         fr = self.functionresults
 
+
+
         for n in self.matrix:
           for m in self.matrix:
-            self.matrix[n][m] = self.checkreverse(fr['gender'],n,m) + self.checkreverse(fr['age'],n,m) + self.checkreverse(fr['languages'],n,m)
+            self.matrix[n][m] = eval(self.affinityfunc)
             self.matrix[m][n] = self.matrix[n][m]
 
 
