@@ -45,10 +45,10 @@ class TestFoo(TestCase):
         }
         g = graffinity.Graffinity(data, funcs)
         results = g.calculate()
-        self.assertEqual(results["n1"]["n1"], 100)
-        self.assertEqual(results["n1"]["n2"], 6.106775831422421)
-        self.assertEqual(results["n2"]["n1"], 6.106775831422421)
-        self.assertEqual(results["n2"]["n2"], 100)
+        self.assertEqual(results["n1"]["n1"], 0.0)
+        self.assertEqual(results["n1"]["n2"], 11.35272601618296)
+        self.assertEqual(results["n2"]["n1"], 11.35272601618296)
+        self.assertEqual(results["n2"]["n2"], 0.0)
 
 
 if __name__=="__main__":

@@ -1,3 +1,6 @@
+import itertools
+from collections import defaultdict
+
 
 class Graffinity(object):
     def __init__(self, data, funcs):
@@ -11,16 +14,17 @@ class Graffinity(object):
         funcs.pop("affinity") #to workaround test's temporary inconsistency
 
         for func in funcs.keys():
-          funcdata = [(d[0],d[1][func]) for d in data.items()]
+          funcdata = [(n,nfuncs[func]) for n,nfuncs in data.items()]
           self.f[func] = {'data':funcdata}
           self.f[func]['funcdef'] = funcs[func]
 
         nodenames = data.keys()
 
-        for datum in nodenames:
-          self.matrix[datum] = {}
-          for otherdatum in nodenames:
-            self.matrix[datum][otherdatum] = 100
+        #We initialize the result matrix
+        for nodename in nodenames:
+          self.matrix[nodename] = {}
+          for othernodename in nodenames:
+            self.matrix[nodename][othernodename] = 0.0
 
         print("initial matrix", self.matrix)
 
@@ -29,24 +33,16 @@ class Graffinity(object):
         for isolatedfunc in self.f.items():
           self.calculateisolatedfunction(isolatedfunc)
 
-        print("******************************************")
-        print("final results per function",self.functionresults)
-
-        #with individual function results do stuff and update self.matrix
-
-
         fr = self.functionresults
 
         for n in self.matrix:
           for m in self.matrix:
-            try:
-              self.matrix[n][m] = self.checkreverse(fr['gender'],n,m) + self.checkreverse(fr['age'],n,m) + self.checkreverse(fr['languages'],n,m)
-            except:
-              pass
+            self.matrix[n][m] = self.checkreverse(fr['gender'],n,m) + self.checkreverse(fr['age'],n,m) + self.checkreverse(fr['languages'],n,m)
+            self.matrix[m][n] = self.matrix[n][m]
+
+
 
         print("final matrix",self.matrix)
-        for functionresult in self.functionresults.items():
-          print(functionresult)
 
         return self.matrix
 
@@ -55,37 +51,23 @@ class Graffinity(object):
 
     def calculateisolatedfunction(self, isolatedfunc):
 
-        print("Processing function: ",isolatedfunc[0])
-        result = {}
         funcdictresult = {}
-
-        #will make tuples of consecutive items in a list (nodepairs)
-        f = lambda data: [data[i:i+2] for i in range(len(data) - 1)]
-
-        nodepairs = f(isolatedfunc[1]['data'])
+        nodepairs = list(itertools.combinations(isolatedfunc[1]['data'],2))
+        funcdictresult = defaultdict(lambda: defaultdict(float))
 
         for nodepair in nodepairs:
           names, values = list(zip(*nodepair))
-
           flatvalues = [item for sublist in values for item in sublist]
+          result = isolatedfunc[1]['funcdef'](flatvalues)
+          funcdictresult[names[0]][names[1]] = result
 
-          for n in names:
-            result = isolatedfunc[1]['funcdef'](flatvalues)
-            funcdictresult[names[0]] = {names[1]:result}
-
-
-        print("******************************************")
-        print(isolatedfunc[0],funcdictresult)
         self.functionresults[isolatedfunc[0]] = funcdictresult
 
         return
 
     def checkreverse(self, function, n, m):
-      try:
-        print("as is! ",function[n][m])
-        return function[n][m]
-      except:
-        print("reverse! ",function[m][n])
+      if function[n][m] == 0:
         return function[m][n]
+      return function[n][m]
 
 
