@@ -5,6 +5,7 @@ import graffinity
 import statistics
 
 
+
 class TestFoo(TestCase):
 
     def test_time_calculation(self):
@@ -27,4 +28,5 @@ class TestFoo(TestCase):
         g.calculate()
 
 if __name__=="__main__":
-   unittest.main()
+    import cProfile
+    cProfile.run('unittest.main()')
