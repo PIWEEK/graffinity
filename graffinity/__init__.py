@@ -9,7 +9,7 @@ from multiprocessing import Process, Queue, Pool, JoinableQueue, Manager
 class Graffinity(object):
     def __init__(self, data, funcs, affinityfunc, processors = 1):
 
-        m = Manager()
+        #m = Manager()
 
         self.data = data
         self.processors = processors
@@ -17,7 +17,8 @@ class Graffinity(object):
         self.affinityfunc = p.sub("self.checkreverse(fr['\\1'],n,m)",affinityfunc)
 
         self.f = {}
-        self.functionresults = m.dict()
+        #self.functionresults = m.dict()
+        self.functionresults = {}
         self.matrix = {}
 
         for func in funcs.keys():
@@ -37,17 +38,19 @@ class Graffinity(object):
 
     def calculate(self):
 
+        # jobs = []
+        # for isolatedfunc in self.f.items():
+        #     p = Process(target=self.calculateisolatedfunction, args=(isolatedfunc,))
+        #     jobs.append(p)
+        #     #p.daemon = True
+        #     p.start()
+        #
+        #     #print(self.functionresults.keys()) #check shared dict
+        # for p in jobs:
+        #     p.join()
+
         for isolatedfunc in self.f.items():
-            p = Process(target=self.calculateisolatedfunction, args=(isolatedfunc,))
-            #p.daemon = True
-            p.start()
-
-            #print(self.functionresults.keys()) #check shared dict
-
-        p.join()
-
-        #for isolatedfunc in self.f.items():
-        #    self.calculateisolatedfunction(isolatedfunc)
+            self.calculateisolatedfunction(isolatedfunc)
 
         fr = self.functionresults
 
