@@ -10,7 +10,7 @@ genderchoices = [1,2]
 agechoices = [i for i in range(18,70)]
 languageslist = [i for i in range(1,20)]
 
-h=datagenerator(30)
+h=datagenerator(50)
 fi = open("atest.py",'w')
 fi.write(str(h))
 fi.close()

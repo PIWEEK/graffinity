@@ -28,7 +28,7 @@ class Graffinity(object):
           for othernodename in nodenames:
             self.matrix[nodename][othernodename] = 0.0
 
-        print("initial matrix", self.matrix)
+        #print("initial matrix", self.matrix)
 
     def calculate(self):
 
@@ -42,7 +42,7 @@ class Graffinity(object):
             self.matrix[n][m] = eval(self.affinityfunc)
             self.matrix[m][n] = self.matrix[n][m]
 
-        print("final matrix",self.matrix)
+        #print("final matrix",self.matrix)
 
         return self.matrix
 
