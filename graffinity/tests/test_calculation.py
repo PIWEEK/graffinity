@@ -45,8 +45,9 @@ class TestFoo(TestCase):
         }
 
         affinityfunc = "gender_func(x) + 3.5*age_func(x) + 0.1*languages_func(x)"
+        groupaffinityfunc = "gender_func(x) + 3.5*age_func(x) + 0.1*languages_func(x)"
 
-        g = graffinity.Graffinity(data, funcs, affinityfunc)
+        g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
         results = g.calculate()
         self.assertEqual(results["n1"]["n1"], 0.0)
         self.assertEqual(results["n1"]["n2"], 4.699007150707624)
