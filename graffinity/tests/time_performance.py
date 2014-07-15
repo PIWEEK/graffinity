@@ -67,11 +67,22 @@ class TestFoo(TestCase):
         skill04_func(x) + skill05_func(x) + skill06_func(x) + skill07_func(x) + \
         skill08_func(x) + skill09_func(x) + skill10_func(x) + guilds_func(x)"""
 
-        g = graffinity.Graffinity(data, funcs, affinityfunc)
+        groupaffinityfunc = """gender_func(x) + age_func(x) + languages_func(x) + \
+        friends_func(x) + knowngames_func(x) + toplaywishlist_func(x) + \
+        favouritegames_func(x) + preferences_func(x) + vetoes_func(x) + \
+        gametype_func(x) + skill01_func(x) + skill02_func(x) + skill03_func(x) + \
+        skill04_func(x) + skill05_func(x) + skill06_func(x) + skill07_func(x) + \
+        skill08_func(x) + skill09_func(x) + skill10_func(x) + guilds_func(x)"""
+
+        g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
         results = g.calculate()
-        
+
         print(results['n1']['n18'],results['n18']['n1'])
 
+        g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
+        group = ['n%i'%(i) for i in range(40,80)]
+        result = g.calculategroup(group)
+        print(group, result/(len(group)-1))
 if __name__=="__main__":
 #    import cProfile
 #    cProfile.run('unittest.main()')
