@@ -1,18 +1,23 @@
 import itertools
 import re
+import os
 from collections import defaultdict
+from multiprocessing import Process, Queue, Pool, JoinableQueue, Manager
+
 
 
 class Graffinity(object):
-    def __init__(self, data, funcs, affinityfunc):
+    def __init__(self, data, funcs, affinityfunc, processors = 1):
+
+        m = Manager()
 
         self.data = data
-
+        self.processors = processors
         p = re.compile("([a-z]+ )_[a-z]+\(x\)", re.VERBOSE)
         self.affinityfunc = p.sub("self.checkreverse(fr['\\1'],n,m)",affinityfunc)
 
         self.f = {}
-        self.functionresults = {}
+        self.functionresults = m.dict()
         self.matrix = {}
 
         for func in funcs.keys():
@@ -33,7 +38,16 @@ class Graffinity(object):
     def calculate(self):
 
         for isolatedfunc in self.f.items():
-            self.calculateisolatedfunction(isolatedfunc)
+            p = Process(target=self.calculateisolatedfunction, args=(isolatedfunc,))
+            #p.daemon = True
+            p.start()
+
+            #print(self.functionresults.keys()) #check shared dict
+
+        p.join()
+
+        #for isolatedfunc in self.f.items():
+        #    self.calculateisolatedfunction(isolatedfunc)
 
         fr = self.functionresults
 
@@ -46,10 +60,15 @@ class Graffinity(object):
 
         return self.matrix
 
+
+
     def calculategroup(self, group):
         pass
 
     def calculateisolatedfunction(self, isolatedfunc):
+        if hasattr(os, 'getppid'):  # only available on Unix
+            print('parent process:', os.getppid())
+        print('process id:', os.getpid(), isolatedfunc[0])
 
         funcdictresult = {}
         nodepairs = list(itertools.combinations(isolatedfunc[1]['data'],2))
@@ -62,11 +81,10 @@ class Graffinity(object):
             funcdictresult[names[0]][names[1]] = result
 
         self.functionresults[isolatedfunc[0]] = funcdictresult
-
         return
 
     def checkreverse(self, function, n, m):
       if function[n][m] == 0.0:
           return function[m][n]
-          
+
       return function[n][m]
