@@ -1,5 +1,4 @@
 from unittest import TestCase
-import unittest
 
 import graffinity
 import statistics
@@ -39,7 +38,6 @@ class TestFoo(TestCase):
         age_func = lambda x: abs(statistics.mean(x) - statistics.stdev(x))/statistics.mean(x)
         languages_func = lambda x: 5*(len(x) - len(set(x)))
 
-
         funcs = {
             "gender": gender_func,
             "age": age_func,
@@ -55,7 +53,3 @@ class TestFoo(TestCase):
         self.assertEqual(results["n2"]["n1"], 4.699007150707624)
         self.assertEqual(results["n2"]["n2"], 0.0)
         self.assertEqual(results["n2"]["n3"], 4.317276211268162)
-
-
-if __name__=="__main__":
-  unittest.main()

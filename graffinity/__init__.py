@@ -16,38 +16,38 @@ class Graffinity(object):
         self.matrix = {}
 
         for func in funcs.keys():
-          funcdata = [(n,nfuncs[func]) for n,nfuncs in data.items()]
-          self.f[func] = {'data':funcdata}
-          self.f[func]['funcdef'] = funcs[func]
+            funcdata = [(n,nfuncs[func]) for n,nfuncs in data.items()]
+            self.f[func] = {'data':funcdata}
+            self.f[func]['funcdef'] = funcs[func]
 
         nodenames = data.keys()
 
         #We initialize the result matrix
         for nodename in nodenames:
-          self.matrix[nodename] = {}
-          for othernodename in nodenames:
-            self.matrix[nodename][othernodename] = 0.0
+            self.matrix[nodename] = {}
+            for othernodename in nodenames:
+                self.matrix[nodename][othernodename] = 0.0
 
         #print("initial matrix", self.matrix)
 
     def calculate(self):
 
         for isolatedfunc in self.f.items():
-          self.calculateisolatedfunction(isolatedfunc)
+            self.calculateisolatedfunction(isolatedfunc)
 
         fr = self.functionresults
 
         for n in self.matrix:
-          for m in self.matrix:
-            self.matrix[n][m] = eval(self.affinityfunc)
-            self.matrix[m][n] = self.matrix[n][m]
+            for m in self.matrix:
+                self.matrix[n][m] = eval(self.affinityfunc)
+                self.matrix[m][n] = self.matrix[n][m]
 
         #print("final matrix",self.matrix)
 
         return self.matrix
 
     def calculategroup(self, group):
-      pass
+        pass
 
     def calculateisolatedfunction(self, isolatedfunc):
 
@@ -56,10 +56,10 @@ class Graffinity(object):
         funcdictresult = defaultdict(lambda: defaultdict(float))
 
         for nodepair in nodepairs:
-          names, values = list(zip(*nodepair))
-          flatvalues = [item for sublist in values for item in sublist]
-          result = isolatedfunc[1]['funcdef'](flatvalues)
-          funcdictresult[names[0]][names[1]] = result
+            names, values = list(zip(*nodepair))
+            flatvalues = [item for sublist in values for item in sublist]
+            result = isolatedfunc[1]['funcdef'](flatvalues)
+            funcdictresult[names[0]][names[1]] = result
 
         self.functionresults[isolatedfunc[0]] = funcdictresult
 
@@ -67,7 +67,6 @@ class Graffinity(object):
 
     def checkreverse(self, function, n, m):
       if function[n][m] == 0.0:
-        return function[m][n]
+          return function[m][n]
+          
       return function[n][m]
-
-
