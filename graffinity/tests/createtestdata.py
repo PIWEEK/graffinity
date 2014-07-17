@@ -1,6 +1,6 @@
 from random import choice, sample, randint
 
-n = 100
+n = 1000
 
 def datagenerator(n=1000):
     datadict = {}

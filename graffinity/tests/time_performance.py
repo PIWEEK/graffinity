@@ -79,10 +79,11 @@ class TestFoo(TestCase):
 
         print(results['n1']['n18'],results['n18']['n1'])
 
-        g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
-        group = ['n%i'%(i) for i in range(40,80)]
-        result = g.calculategroup(group)
-        print(group, result/(len(group)-1))
+        # g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
+        # group = ['n%i'%(i) for i in range(40,80)]
+        # result = g.calculategroup(group)
+        # print(group, result/(len(group)-1))
+
 if __name__=="__main__":
 #    import cProfile
 #    cProfile.run('unittest.main()')

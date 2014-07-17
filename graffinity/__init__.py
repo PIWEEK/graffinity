@@ -67,6 +67,7 @@ class Graffinity(object):
 
     def calculate(self):
         pool=Pool(cpu_count())
+        pool=Pool(1)
         jobs = []
         for isolatedfunc in self.f.items():
             job = pool.apply_async(run_dill_encoded, (dill.dumps((graffinity_worker, isolatedfunc)),))
