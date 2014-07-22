@@ -1,6 +1,6 @@
 from random import choice, sample, randint
 
-n = 1000
+n = 5000
 
 def datagenerator(n=1000):
     datadict = {}
@@ -55,7 +55,9 @@ skill09choices = skill01choices
 skill10choices = skill01choices
 guildslist = [i for i in range(1,200)]
 
-h=datagenerator(n)
-fi = open("atest.py",'w')
-fi.write(str(h))
-fi.close()
+if __name__=="__main__":
+
+    h=datagenerator(n)
+    fi = open("atest.py",'w')
+    fi.write(str(h))
+    fi.close()

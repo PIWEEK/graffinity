@@ -3,14 +3,24 @@ import unittest
 
 import graffinity
 import statistics
-
+import createtestdata
 
 
 class TestFoo(TestCase):
 
     def test_time_calculation(self):
+
+        print("creating data test")
+        n = 16
+        h=createtestdata.datagenerator(n)
+        fi = open("atest.py",'w')
+        fi.write(str(h))
+        fi.close()
+
         with open("atest.py",'r') as tf:
             data = eval(tf.read())
+
+        print("creating data test: FINISHED")
 
         gender_func = lambda x: abs(statistics.mean(x) - statistics.stdev(x))/statistics.mean(x)
         age_func = lambda x: abs(statistics.mean(x) - statistics.stdev(x))/statistics.mean(x)
@@ -75,9 +85,10 @@ class TestFoo(TestCase):
         skill08_func(x) + skill09_func(x) + skill10_func(x) + guilds_func(x)"""
 
         g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
+
         results = g.calculate()
 
-        print(results['n1']['n18'],results['n18']['n1'])
+        print(results.get('n1','n18'),results.get('n18','n1'))
 
         # g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
         # group = ['n%i'%(i) for i in range(40,80)]

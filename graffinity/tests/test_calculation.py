@@ -49,6 +49,7 @@ class TestFoo(TestCase):
 
         g = graffinity.Graffinity(data, funcs, affinityfunc, groupaffinityfunc)
         results = g.calculate()
-        self.assertEqual(results["n1"]["n2"], 4.3478260869565215)
-        self.assertEqual(results["n2"]["n1"], 4.3478260869565215)
-        self.assertEqual(results["n2"]["n3"], 4.517241379310345)
+        print(results)
+        self.assertEqual(results.get("n1","n2"), 4.3478260869565215)
+        self.assertEqual(results.get("n2","n1"), 4.3478260869565215)
+        self.assertEqual(results.get("n3","n2"), 4.517241379310345)

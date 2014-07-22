@@ -6,6 +6,18 @@ from multiprocessing import Pool, cpu_count
 
 import dill
 
+class MatrixWrapper(object):
+
+    def __init__(self, matrix):
+        self.matrix = matrix
+
+    def get(self, n1, n2):
+        try:
+            self.matrix[n1][n2]
+            return self.matrix[n1][n2]
+        except:
+            return self.matrix[n2][n1]
+
 class GraffinityFunctionCalculator(object):
     def __init__(self, isolatedfunc):
         self._isolatedfunc = isolatedfunc
@@ -45,12 +57,11 @@ class Graffinity(object):
         p = re.compile("([a-zA-Z0-9]+ )_[a-z]+\(x\)", re.VERBOSE)
 
         self.groupaffinityfunc = p.sub("fr['\\1']", groupaffinityfunc)
-        self.affinityfunc = p.sub("checkreverse(fr['\\1'],n,m)", affinityfunc)
+        self.affinityfunc = p.sub("fr['\\1'][n][m]", affinityfunc)
 
         self.funcs = funcs
 
         self.f = {}
-        self.matrix = {}
 
         for func in self.funcs.keys():
             funcdata = [(n, nfuncs[func]) for n, nfuncs in data.items()]
@@ -60,14 +71,25 @@ class Graffinity(object):
         nodenames = data.keys()
 
         #We initialize the result matrix
-        for nodename in nodenames:
-            self.matrix[nodename] = {}
-            for othernodename in nodenames:
-                self.matrix[nodename][othernodename] = 0.0
+        print("We create the g object")
+        self.matrix = {}
+ 
+        for i,j in itertools.combinations(nodenames,2):
+            if i in self.matrix:
+                self.matrix[i].update({j:0.0})
+            else:
+                self.matrix[i] = {j:0.0}
+
+        print("We create the g object: FINISHED", len(self.matrix))
+        #We initialize the result matrix OLD WAY
+#        for nodename in nodenames:
+#            self.matrix[nodename] = {}
+#            for othernodename in nodenames:
+#                self.matrix[nodename][othernodename] = 0.0
 
     def calculate(self):
         pool=Pool(cpu_count())
-        pool=Pool(1)
+#        pool=Pool(1)
         jobs = []
         for isolatedfunc in self.f.items():
             job = pool.apply_async(run_dill_encoded, (dill.dumps((graffinity_worker, isolatedfunc)),))
@@ -81,12 +103,11 @@ class Graffinity(object):
         # This variable must be named fr because it's used in the eval(self.affinityfunc)
         fr = self.functionresults
 
-        for n in self.matrix:
-            for m in self.matrix:
+        for n,values in self.matrix.items():
+            for m in values:
                 self.matrix[n][m] = eval(self.affinityfunc)
-                self.matrix[m][n] = self.matrix[n][m]
 
-        return self.matrix
+        return  MatrixWrapper(self.matrix)
 
     def calculategroup(self, group):
 
@@ -119,8 +140,3 @@ class Graffinity(object):
 
         return funcdictresult
 
-def checkreverse(function, n, m):
-    if function[n][m] == 0.0:
-        return function[m][n]
-
-    return function[n][m]
