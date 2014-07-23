@@ -1,4 +1,4 @@
-graffinity
+Graφnity
 ==========
 
-Graffinity for graphs
+Affinity for graphs
